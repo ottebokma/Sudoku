@@ -1,0 +1,6 @@
+*~
+*.o
+lib*.a
+lib*.so.*
+.emacs*
+*.so
