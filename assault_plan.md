@@ -23,87 +23,72 @@ pointer-to-member, three-way comparison, yield-expression and comma operators.
 The throw operator: maybe.
 So learn what the other operators mean:
 
-...
 
-::
-a++ a--
-a()
-a[]
-.
-++a --a
-+a -a
-! ~
-sizeof
-a*b a/b a%b
-a+b a-b
-<< >>
-< <=
-> >=
-== !=
-&
-^
-|
-&&
-||
-a?b:c
-=
-+= -=
-*= /= %=
-<<= >>=
-&= ^= |=
 
-...
+    ::
+    a++ a--
+    a()
+    a[]
+    .
+    ++a --a
+    +a -a
+    ! ~
+    sizeof
+    a*b a/b a%b
+    a+b a-b
+    << >>
+    < <=
+    > >=
+    == !=
+    &
+    ^
+    |
+    &&
+    ||
+    a?b:c
+    =
+    += -=
+    *= /= %=
+    <<= >>=
+    &= ^= |=
+
 
 Every variable in C++ has a type. Nearly all expressions also have a type.
 Some types are built in, such as these:
-bool
-char (signed, unsigned)
-int (short, long; signed, unsigned)
-float, double
+    bool
+    char (signed, unsigned)
+    int (short, long; signed, unsigned)
+    float, double
 
 Variables have scope. Outside their scope, they are not known to the compiler:
 
-...
-
-{
-    int a = 13;
-	{
-	    int b = 42;
-	}
-	a = b; // Won't Compile because b is out of scope.
-}
-
-...
+    {
+        int a = 13;
+	    {
+	        int b = 42;
+	    }
+	    a = b; // Won't Compile because b is out of scope.
+    }
 
 Pointers and references exist, but we save them for later.
 
 New types can be composed. Here is a point in 2D:
 
-...
-
-struct Point
-{
-    float x;
-	float y;
-}
+    struct Point
+    {
+        float x;
+	    float y;
+    }
 
 Classes also exist, but that is for later.
-
-...
 
 Functions also have types, determined by their signatures. Here is a function
 of type function-that-takes-two-Points-and-returns-a-float:
 
-...
-
-float distance(Point a, Point b)
-{
-    return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
-}
-
-class 
-
-...
+    float distance(Point a, Point b)
+    {
+         return sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
+    }
 
 The Standard Template Library (STL) comes with a number of additional types,
 one of which is std::string. A string is an object, and it has functions that
@@ -148,19 +133,18 @@ Write a program that does the following:
 Create a new git branch to work in.
 Extend the above program. Consider the file sudoku_001.txt.
 The program is now called like this:
-...
+
     ./sudoku < ../sudoku_001.txt
-...
+
 So the line we read represents a sudoku. We are going to store it in memory as
 an array of ints:
-...
+
     int sudoku[81];
-...
+
 (Be careful: an array in C++ cannot be copied as it can in Python.
 This won't work:
-...
-int copy_of_sudoku[81] = sudoku; // WC. C/C++ doesn't work that way.
-...
+
+    int copy_of_sudoku[81] = sudoku; // WC. C/C++ doesn't work that way.
 
 After solving, we are going to write the sudoku again as a string.
 So we need to convert from string to array of ints and back.
