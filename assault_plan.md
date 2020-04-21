@@ -130,14 +130,13 @@ Write a program that does the following:
 
 #### Assignment
 
-Create a new git branch to work in.
-Extend the above program. Consider the file sudoku_001.txt.
-The program is now called like this:
+Consider the file sudoku_001.txt.
+The program will from now on be called like this:
 
     ./sudoku < ../sudoku_001.txt
 
-So the line we read represents a sudoku. We are going to store it in memory as
-an array of ints:
+So the line we read represents a sudoku. We read it as a string, but we
+are going to store it in memory as an array of ints:
 
     int sudoku[81];
 
@@ -149,17 +148,20 @@ This won't work:
 After solving, we are going to write the sudoku again as a string.
 So we need to convert from string to array of ints and back.
 
+* Create a new branch in git to work in:
+    git branch conversion
+    git checkout conversion
+* Modify the above program in the following way.
 * After having read the line into a string, iterate over the string (char by
   char) as well as the array (int by int).
-* When the char is a '.', put a 0 in the array.
+  When the char is a '.', put a 0 in the array.
   When the char is a '1', put a 1 in the array, when it is a '2', store a 2, etc.
+  Note the distinction between '2' and 2.
   Thus we convert from ASCII to true numbers.
-* We will not copy the original string any more. Instead, we are going to
-  convert from the array of ints back into the new string.
-* So create a string of 81 dots ('.').
+* Do not copy the original string any more. Instead, create a string of 81 dots ('.').
 * Now iterate again, over the array and this new string. When the number in the
   array is a 0, don't change the char in the string. When it is not 0, write
-  the proper char into the string.
+  the proper char into the string. Again convert, this time from true numbers to ASCII.
 * Write the created string to stdout.
 * Keep the comparison in place.
 * To test it, temporarily change one of the numbers in the array just before
