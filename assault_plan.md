@@ -167,3 +167,60 @@ So we need to convert from string to array of ints and back.
 * To test it, temporarily change one of the numbers in the array just before
   converting back to string.
 * What happens if you make a number greater than 9?
+* If you never used git during the work, now is the time to add all the files
+  you worked on and commit the changes. Only add sources, not the executable
+  programs the compiler builds for you.
+* After that, switch back to the 'master' branch, merge the 'conversion' branch,
+  and then delete the 'conversion' branch as it's no longer used.
+
+
+## Functions
+
+Using functions, the programmer can cut large pieces of code into smaller ones.
+This serves several purposes:
+
+* Re-use of code. A function can be called in multiple places.
+* Documentation. Calling a function called 'distance' is clearer than an
+  expression that computes the distance.
+* Reducing scope. The code in a function will be influenced only by its
+  parameters. It will influence other code only through the return value.
+  (This is why global variables are bad.)
+
+In C++, function arguments are passed by value. That is, given this function
+
+    Point translate(Point a)
+    {
+	     a.x += 2;
+		 a.y += 2;
+		 return a;
+    }
+
+the following function call will not change Origin:
+
+    Point origin(0, 0);
+	Point tutu = translate(origin);
+
+That is because 'a' in the parameter list of 'translate' is a copy of 'origin'.
+If we *want* to influence the original, we can give the function a reference parameter:
+
+    Point translate_with_change(Point &a)
+    {
+	     a.x += 2;
+		 a.y += 2;
+		 return a;
+    }
+
+If this is the function being called, 'origin' *will* change.
+
+
+#### Assignment
+
+* Create another git branch. Once you are done with this assignment, merge and delete it.
+* Create functions to
+  * read a string from cin,
+  * convert a single char from ASCII to an int,
+  * convert an int to an ASCII char,
+  * convert from a string to an array of ints,
+  * convert from an array of ints to a string,
+  * write a string to cout.
+* Make your program more readable by using all these functions.
