@@ -11,6 +11,17 @@ When in doubt, consult https://cppreference.com
 Consider specifying 'site:cppreference.com' in Google.
 Stackoverflow is only useful if you understand the questions.
 
+## Planning
+
+* Week 1: Git. Basics. I/O and strings. ASCII.
+          Result: a program that reads/writes sudokus.
+* Week 2: Functions. Compiling/linking. Headers. Program layout.
+          Result: a program that is readable and easily extended.
+* Week 3: More functions. Recursion. Brute-forcing.
+          Result: a program that solves sudokus.
+* Week 4: Improvements: readability, efficiency.
+          Result: to be determined. Faster solving? Nicer input/output format?
+* Week 5: Reserved.
 
 ## Basics (Types and Expressions):
 
