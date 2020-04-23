@@ -17,7 +17,7 @@ Stackoverflow is only useful if you understand the questions.
           Result: a program that reads/writes sudokus.
 * Week 2: Functions. Compiling/linking. Headers. Program layout.
           Result: a program that is readable and easily extended.
-* Week 3: More functions. Recursion. Brute-forcing.
+* Week 3: Solving. More functions. Recursion. Brute-forcing.
           Result: a program that solves sudokus.
 * Week 4: Improvements: readability, efficiency.
           Result: to be determined. Faster solving? Nicer input/output format?
@@ -413,7 +413,8 @@ def_my_functions_hh, it does know. So it skips through to the next #endif.
 
 Conveniently, this means that main.cpp can include both my_functions.hh and more
 function.hh, but the bulk of my_functions.hh is still only going to be processed
-once, because the second (or even more) times it gets included, the preprocessor skips it.
+once, because the second (or even more) times it gets included, the preprocessor
+skips it.
 
 Therefore, header files *always* must have include guards.
 
@@ -449,3 +450,138 @@ To build the project,
 * the other objects are linked against the library to become programs.
 
 We will automate that process by using GNU Make and a convenient Makefile.
+
+## Solving
+
+### Checking
+
+From now on, all assignments should be written in a new git branch, which is
+then merged and deleted when the assignment is completed.
+
+A sudoku is 'complete' when all its numbers are in the range [1-9].
+
+The rules of a sudoku are that
+* each number may occur only once in each row,
+* each number may occur only once in each column,
+* each number may occur only once in each 3x3 square.
+
+#### Assignment
+
+* Create a typedef for our array:
+
+    typedef int Sudoku[81];
+
+  That is: a Sudoku is an array of 81 ints.
+* Define (and test) a function that fits this declaration:
+
+    bool complete(Sudoku const &sudoku);
+  
+  It should return 'true' if the sudoku is complete, and false if it is not.
+  Test the function with input that represents a complete sudoku.
+  (This assignment should not be too hard.)
+  
+#### Assignment
+
+Define a function 'line_valid' that
+* takes a const reference to a Sudoku,
+* takes a line number (in the range [0, 9>),
+* returns bool.
+It should return 'false' iff any number from the range [1,9] occurs multiple
+times in the row. (In particular, it is allowed that 0 occur multiple times.
+That just means the field has not been filled in yet.)
+Hint: from the line number, first compute the position in the array to start at.
+
+#### Assignment
+
+Define a function that checks whether a column is valid. It should take a const
+reference to a Sudoku, and a column number in the range [0,9>.
+Hint: this is slightly harder than checking a line, because the fields are not next
+to one another in the array. But at least they are at regular intervals.
+
+#### Assignment
+
+Define a function that checks whether a (3x3) square is valid.
+Hint: this is the hardest function of the three, because it involves two loops,
+not just one.
+
+#### Assignment
+
+Define a function that checks whether the entire Sudoku is valid.
+
+#### Assignment
+
+Define a function that checks whether a Sudoku is both complete and valid.
+Perhaps call it 'solved'.
+(This should be extremely easy by now.)
+
+### Solving proper
+
+Now that we can tell whether a Sudoku is valid, we are going to try and solve one.
+
+The steps are quite simple:
+
+* Find the next field that has no value yet.
+* For each value in [1-9],
+  * Fill in that value.
+  * If the Sudoku is now invalid, continue with the next value.
+    else (if it is still valid), continue with the next field.
+  * If there are no more fields left (and the Sudoku is still valid), we have
+    solved it. Print the solution!
+  * If there are no more values left, the sudoku is not solvable. Perhaps at an
+    earlier step we have filled in a value that gives us trouble now. Unset the
+	field and go back to the previous field.
+That last thing - going back to the previous field - requires the program to
+remember where the previous field was. It needs some kind of stack where it can
+put that number, to be popped off again when it turns out no value works and
+none are left to try.
+
+This is extremely similar to how function calling itself works:
+
+    int multiply(int left, int right)
+	{
+	    int const result = left * right;
+	    cout << left << " * " << right << " = " << result;
+	    return result;
+	}
+
+    int square(int num)
+	{
+	    int const result = multiply(num, num);
+	    cout << "sqr(" << num << ") = " << result;
+		return result;
+	}
+
+When 'square' calls 'multiply', the function 'multiply' runs, but after that,
+the program continues in 'square' just after the call to 'multiply'.
+
+We are going to use this similarity by having a function call itself.
+This is called "recursion".
+
+#### Assignment
+
+Write a function next_empty_field that returns the index of the next field in
+the Sudoku that has not yet been filled in. If there are no empty fields, it
+should return 81, that is: one more than the maximum field index.
+
+#### Assignment
+
+Write a function called 'solve' that returns bool and takes a reference to a
+Sudoku (but not a const reference). It should do the following.
+
+* Find the next empty field.
+  * If there is none, check that the sudoku is solved.
+    * If it is solved, print the solution and return true.
+	  Otherwise, just return false.
+  * Try to fill in each number from [1-9]. For each number filled in,
+    * Check if the sudoku is still valid.
+	  If not, skip to the next number.
+	* Magic action should happen here.
+  * Now, no numbers are left. If none of our attempts worked, we should return
+    false.
+	
+So far, we have a function that takes a Sudoku from input. It finds the first
+unset field, and tries to fill in values. If the number filled in conflicts with
+another in the same row/column/square, it skips that number. Let's assume that a
+'1' can actually be filled in. Then we have a Sudoku from input with another
+number filled in by the program. How do we figure out whether that could become
+a valid Sudoku?
