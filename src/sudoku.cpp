@@ -29,9 +29,15 @@ int main()
             return E_INVALIDINPUT;
         }
     }
-    cout << '\n';
 
-    //string sudoku_str = to_string(sudoku_arr);
+    string sudoku_str(81,'.');
 
-    //cout << sudoku_str << '\n';
+    for (int i = 0; i != 81; ++i)
+    {
+        int const num = sudoku_arr[i];
+        if (1 <= num and num <= 9)
+            sudoku_str[i] = num + '0';
+    }
+
+    cout << sudoku_str << '\n';
 }
