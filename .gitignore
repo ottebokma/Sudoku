@@ -4,3 +4,4 @@ lib*.a
 lib*.so.*
 .emacs*
 *.so
+src/sudoku
