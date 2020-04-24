@@ -5,10 +5,15 @@ using namespace std;
 
 int main()
 {
-    string str;
-    cin >> str;
+    string in_str;
+    cin >> in_str;
 
-    int sudoku[81] = stoi(str);
+    int sudoku = stoi(in_str);
+    int sudoku_arr[81];
 
-    cout << sudoku << '\n';
+    
+
+    //string sudoku_str = to_string(sudoku_arr);
+
+    cout << sudoku_arr << '\n';
 }
