@@ -16,13 +16,13 @@ int main()
 
     int sudoku_arr[81];
 
-    for (int i = 0; i != 81; ++i)
+    for (int pos = 0; pos != 81; ++pos)
     {
-        char const letter = in_str[i];
+        char const letter = in_str[pos];
         if (letter == '.')
-            sudoku_arr[i] = 0;
+            sudoku_arr[pos] = 0;
         else if ('1' <= letter and letter <= '9')
-            sudoku_arr[i] = letter - '0';
+            sudoku_arr[pos] = letter - '0';
         else
         {
             cerr << "Invalid input: " << letter << '\n';
@@ -32,11 +32,13 @@ int main()
 
     string sudoku_str(81,'.');
 
-    for (int i = 0; i != 81; ++i)
+    for (int pos = 0; pos != 81; ++pos)
     {
-        int const num = sudoku_arr[i];
+        int const num = sudoku_arr[pos];
         if (1 <= num and num <= 9)
-            sudoku_str[i] = num + '0';
+            sudoku_str[pos] = num + '0';
+        //TO DO
+        //Check range
     }
 
     cout << sudoku_str << '\n';
