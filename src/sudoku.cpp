@@ -55,10 +55,7 @@ int main()
     }
 
     //Checks if input and output strings match
-    if (in_str == sudoku_str)                       //If strings match print this
-        cout << "Yayyy\n";
-    else                                            //If strings do not match print  this
-        cout << "ÄÄÄÄÄÄÄÄHHHHH NÖÖÖÖÖÖÖÖ\n";
+    cout << ((in_str == sudoku_str) ? "Yayyy" : "ÄÄÄÄÄÄÄÄHHHHH NÖÖÖÖÖÖÖÖ") << '\n';
     
     cout << in_str << '\n';
     cout << sudoku_str << '\n';
