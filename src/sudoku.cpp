@@ -13,7 +13,7 @@ int main()
     string in_str;
     cin >> in_str;
 
-    //Checks if the input string length is correct
+    //Checks if string length is correct, to find possible issue
     if (in_str.length() != 81)
     {
         cerr << "Invalid input: wrong length\n";
@@ -21,32 +21,34 @@ int main()
     }
         
 
-    int sudoku_arr[81];                             //Variable for array
+    int sudoku_arr[81];
 
-    // Convert input string to array
+    //Convert input string to array
+    //So that the program can use the input
     for (size_t pos = 0; pos != 81; ++pos)
     {
-        char const letter = in_str[pos];            //Makes input from position as char const
-        if (letter == '.')                          //If the character i '.' puts 0 in array
+        char const letter = in_str[pos];
+        if (letter == '.')
             sudoku_arr[pos] = 0;
-        else if ('1' <= letter and letter <= '9')   //If 1 <= character <= 9 puts that number in array
+        else if ('1' <= letter and letter <= '9')
             sudoku_arr[pos] = letter - '0';
-        else                                        //If none of the statements apply give error code for invalid inpus
+        else
         {
             cerr << "Invalid input: " << letter << '\n';
             return E_INVALIDINPUT;
         }
     }
 
-    string sudoku_str(81,'.');                      //Variable for new string
+    string sudoku_str(81,'.');
 
     //Convert array to string
+    //So that the output has the same type as the input
     for (size_t pos = 0; pos != 81; ++pos)
     {
         int const num = sudoku_arr[pos]; 
-        if (1 <= num and num <= 9)                  //If 1 <= num <= 9 puts num in string as char
+        if (1 <= num and num <= 9)
             sudoku_str[pos] = num + '0';
-        else if (num != 0)                          //If num is not '.' or 1-9 give error code for invalid computation
+        else if (num != 0)
         {
             cerr << "Invalid computation: number not 1-9 in array\n";
             return E_INVALIDCOMPUTATION;
@@ -54,8 +56,16 @@ int main()
         
     }
 
+<<<<<<< HEAD
+    //Checks if input and output strings match, to find possible issue
+    if (in_str == sudoku_str)
+        cout << "Yayyy\n";
+    else
+        cout << "ÄÄÄÄÄÄÄÄHHHHH NÖÖÖÖÖÖÖÖ\n";
+=======
     //Checks if input and output strings match
     cout << ((in_str == sudoku_str) ? "Yayyy" : "ÄÄÄÄÄÄÄÄHHHHH NÖÖÖÖÖÖÖÖ") << '\n';
+>>>>>>> 25fb2fe627367ce993ee5cf0e0a963e7c2f2748d
     
     cout << in_str << '\n';
     cout << sudoku_str << '\n';
