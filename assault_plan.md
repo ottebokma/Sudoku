@@ -374,7 +374,8 @@ about, like these?:
 
 Those are header guards. With the function declarations currently in
 my_functions.hh, nothing can go wrong. You can declare a function as many times
-as you like. But it is also practical to be able to put type definitions in header files, like this one:
+as you like. But it is also practical to be able to put type definitions in
+header files, like this one:
 
     struct Point
     {
