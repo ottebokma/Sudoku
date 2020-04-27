@@ -9,17 +9,21 @@ CXXFLAGS ?= -Wall -std=c++2a
 # Find and use the convenience library.
 LDFLAGS += -L. -l$(LIBNAME)
 
-# Programs are sudoku and whatever is in the 'programs' dir.
+# When compiling, generate dependency listings, too.
+DEPDIR = generated_deps
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.dep
+
+# Programs are 'sudoku' and whatever is in the 'programs' dir.
 CXX_PROG_SOURCES = sudoku.cpp $(wildcard programs/*.cpp)
 CXX_PROGRAMS = $(patsubst %.cpp,%,$(CXX_PROG_SOURCES))
 
 # We scan the entire directory for source files.
 CXX_SOURCES = $(patsubst ./%,%,$(shell find ./ -type f -name \*.cpp))
 CXX_OBJECTS = $(patsubst %.cpp,%.o,$(CXX_SOURCES))
+CXX_OBJDEPS = $(patsubst %.cpp,%.dep,$(CXX_SOURCES))
 
 # Whatever is not a program source goes into the library.
 CXX_LIBSOURCES = $(filter-out $(CXX_PROG_SOURCES),$(CXX_SOURCES))
-CXX_LIBOBJECTS = $(patsubst %.cpp,%.o,$(CXX_LIBSOURCES))
 
 # Name of library and the file continaing it.
 LIBNAME = proj
@@ -44,15 +48,26 @@ $(LIBRARY): $(CXX_LIBOBJECTS)
 # It says that for each of $(PROGRAMS), we can build X if we have X.cpp,
 # *and* it says that if X.cpp is newer than X, X needs to be rebuilt.
 # The recipe calls CXX with al appropriate flags, with the target as output and the first prerequisite as input.
-$(CXX_OBJECTS): %.o: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+$(CXX_OBJECTS): %.o: %.cpp $(DEPDIR)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
+
+# This is where we store the dependencies.
+$(DEPDIR):
+	mkdir $@
 
 # 'make clean' removes all generated files.
 clean:
 	rm -f $(PROGRAMS) $(CXX_OBJECTS) $(LIBRARY)
+	rm -rf $(DEPDIR)
 
 # Even if a file 'clean' should exist, run the recipe anyway.
 .PHONY: clean
 
 # Block any attempts to remake the Makefile.
 Makefile:;
+
+# Source files need to be recompiled when header files that they include are
+# newer than the object. Including the generated dependency files ensures this.
+ifneq (,$(wildcard $(DEPDIR)))
+    -include $(shell find $(DEPDIR) -name \*.dep)
+endif

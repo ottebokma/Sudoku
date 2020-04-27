@@ -5,3 +5,4 @@ lib*.so.*
 .emacs*
 *.so
 src/sudoku
+generated_deps
