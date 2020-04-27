@@ -21,6 +21,7 @@ Stackoverflow is only useful if you understand the questions.
           Result: a program that solves sudokus.
 * Week 4: Improvements: readability, efficiency.
           Result: to be determined. Faster solving? Nicer input/output format?
+		          Objects? Generic Algorithms? Multithreading? Python Module?
 * Week 5: Reserved.
 
 ## Basics (Types and Expressions):
