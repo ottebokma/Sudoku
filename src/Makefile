@@ -1,20 +1,31 @@
 #!/usr/bin/make
 
+# Simple Makefile. Source files either become programs, or they go into the
+# convenience library, against which the programs are linked.
+
+# https://www.gnu.org/software/make/manual/html_node/Reading-Makefiles.html
+
+# If you want a new program name, change it here.
+MAIN_PROG_SRC = sudoku.cpp
+
 # If there are other than C++ programs, add them here.
 PROGRAMS = $(CXX_PROGRAMS)
 
-# If we forget (?=) to specify flags, we want to use these.
+# How to add debug info.
+#$(info PROGRAMS: $(PROGRAMS))
+
+# If we forget (?=) to specify flags, use at least these.
 CXXFLAGS ?= -Wall -std=c++2a
 
-# Find and use the convenience library.
+# We build a static convenience library. The linker needs flags to find them.
 LDFLAGS += -L. -l$(LIBNAME)
 
 # When compiling, generate dependency listings, too.
-DEPDIR = generated_deps
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.dep
+DEPDIR = generated_deps
 
-# Programs are 'sudoku' and whatever is in the 'programs' dir.
-CXX_PROG_SOURCES = sudoku.cpp $(wildcard programs/*.cpp)
+# Programs are main and whatever is in the 'programs' dir.
+CXX_PROG_SOURCES = $(MAIN_PROG_SRC) $(wildcard programs/*.cpp)
 CXX_PROGRAMS = $(patsubst %.cpp,%,$(CXX_PROG_SOURCES))
 
 # We scan the entire directory for source files.
@@ -25,30 +36,34 @@ CXX_OBJDEPS = $(patsubst %.cpp,%.dep,$(CXX_SOURCES))
 # Whatever is not a program source goes into the library.
 CXX_LIBSOURCES = $(filter-out $(CXX_PROG_SOURCES),$(CXX_SOURCES))
 
-# Name of library and the file continaing it.
+# Name of our library and the file containing it.
 LIBNAME = proj
 LIBRARY = lib$(LIBNAME).a
 
-# How to add debug info.
-#$(info PROGRAMS: $(PROGRAMS))
+# https://www.gnu.org/software/make/manual/html_node/Rules.html#Rules
+# https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
 
 # The default target (by convention called 'all') is: to build the programs.
 all: $(PROGRAMS)
 
-# Programs are built by linking their object files against the convenience library.
+# Programs are built by linking their object files against the convenience
+# library. This is a static pattern rule:
+# https://www.gnu.org/software/make/manual/html_node/Static-Usage.html#Static-Usage
+# We don't call the linker directly. We call it through the compiler.
 $(CXX_PROGRAMS): %: %.o $(LIBRARY)
+	@printf "[Linking $@]\n\t"
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
-# The library contains all other objects.
+# The library contains all object files that don't become programs.
 $(LIBRARY): $(CXX_LIBOBJECTS)
+	@printf "[Composing $@ of $^]\n\t"
 	ar rcs $@ $^
 
 # Any non-program C++ source builds an object that goes into the library.
-# This is a static pattern rule: ( https://www.gnu.org/software/make/manual/html_node/Static-Usage.html#Static-Usage )
-# It says that for each of $(PROGRAMS), we can build X if we have X.cpp,
-# *and* it says that if X.cpp is newer than X, X needs to be rebuilt.
-# The recipe calls CXX with al appropriate flags, with the target as output and the first prerequisite as input.
+# The use of $(DEPFLAGS) causes a dependency file to also be written.
+# (But Make does not know that!)
 $(CXX_OBJECTS): %.o: %.cpp $(DEPDIR)
+	@printf "[Compiling $@]\n\t"
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 # This is where we store the dependencies.
@@ -63,11 +78,25 @@ clean:
 # Even if a file 'clean' should exist, run the recipe anyway.
 .PHONY: clean
 
-# Block any attempts to remake the Makefile.
-Makefile:;
-
 # Source files need to be recompiled when header files that they include are
 # newer than the object. Including the generated dependency files ensures this.
+# If make has run previously, $(DEPDIR) will exist.
 ifneq (,$(wildcard $(DEPDIR)))
-    -include $(shell find $(DEPDIR) -name \*.dep)
+
+    # In that case, find all .dep-files in $(DEPDIR) and include them.
+    FOUND_CXX_DEPS = $(shell find $(DEPDIR) -name \*.dep)
+
+    # They list the dependencies of source files on the headers they include,
+    # which ensures that sources that include foo.hh have their objects rebuilt
+    # when foo.hh is newer. Thus we need run 'make clean' less often.
+    -include $(FOUND_CXX_DEPS)
+
+    # Don't let Make try to rebuild the .deps. (We don't even tell it how to,
+    # but it will try to find a rule for them anyway.)
+    $(FOUND_CXX_DEPS):;
 endif
+
+# Also block any attempts to remake the Makefile itself.
+Makefile:;
+
+# https://www.gnu.org/software/make/manual/html_node/index.html

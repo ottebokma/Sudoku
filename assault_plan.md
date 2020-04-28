@@ -421,7 +421,7 @@ skips it.
 Therefore, header files *always* must have include guards.
 
 Do internal headers also need include guards? Well, no, because internal headers
-are only ever going to be includes by the source files that implement the
+are only ever going to be included by the source files that implement the
 functions in the header file. If programs or functions elsewhere need those
 functions too, they should include the header file, not the internal header
 file. Therefore, internal header files do not run the risk of being included
@@ -435,6 +435,7 @@ Eventually, the layout of the src/ directory is going to look like this:
                                   and perhaps misc/misc.hh)
 
     libproj.a                    (containing all objects from all subdirs)
+	                             (libproj.a is a static library)
 
     myfunctions/myfunctions.hh   (perhaps including misc.hh)
                 myfunctions.ih   (including at least myfunction.hh)
@@ -446,12 +447,82 @@ Eventually, the layout of the src/ directory is going to look like this:
 
     more subdirs if needed
 
-To build the project,
-* all source files are compiled into objects,
-* those objects that will not become programs go into the library,
-* the other objects are linked against the library to become programs.
+##### GNU Make
 
-We will automate that process by using GNU Make and a convenient Makefile.
+To build the project,
+* compile all source files into objects,
+* put all object files that will *not* become programs into the libproj.a,
+* link the object files that *will* become programs against libproj.a.
+
+We will automate that build process by using GNU Make and a convenient Makefile.
+What problem does Make solve? A problem of efficiency.
+
+For one, it's too much work to just type the commands and remember the order of
+the above steps. For another, we don't even want to execute all of these
+commands unless we have to. Now that our code is in several source files, we
+only want to recompile those that we changed.
+Type one extra line in sudoku.cpp and recompile all source files? Oh no.
+
+So We tell Make what parts of the program depend on what other parts, and how to
+build each part. Then Make does the building. Make reads the Makefile we write,
+and in it we put rules, like this one:
+
+    sudoku.o: sudoku.cpp
+    	    g++ -Wall -std=c++2a -c -o $@ $<
+
+This rule, says that
+* sudoku.o (the target) can be built from sudoku.cpp (a prerequisite, of which
+  there may be many),
+* the building can be done by executing the recipe (which may have multiple
+  lines), with '$@' the name of the target and '$<' the name of the first
+  prerequisite.
+* when sudoku.cpp is newer (than sudoku.o), sudoku.o must be updated.
+
+Here's another few rules:
+
+    # Link program objects against libproj.a
+    sudoku: sudoku.o libproj.a
+    	    g++ -Wall -std=c++2a -L. -lproj -o $@ $<
+		
+	# Put object files into the library.	
+	libproj.a: myfunctions/ascii2int.o myfunctions/int2ascii.o
+		    ar rcs $@ $^
+		
+	myfunctions/ascii2int.o: myfunctions/ascii2int.cpp
+	    	g++ -Wall -std=c++2a -c -o $@ $<
+	
+	myfunctions/int2ascii.o: myfunctions/int2ascii.cpp
+	    	g++ -Wall -std=c++2a -c -o $@ $<
+	
+With these rules, Make is smart enough to figure out that in order to build
+'sudoku', it first needs to build 'sudoku.o' and 'libproj.a'. It also
+understands that when sudoku.cpp changes, it needs to recompile that re-link it
+against libproj.a, but it doesn't have to recompile the other sources, nor even
+to re-create libproj.a.
+
+There is a bit of redundancy in the example, in that the commands to build
+object files (*.o) are all very similar except for the file names.
+The actual Makefile we use deals with that, too.
+
+It ensures that all source files are compiled into object files.
+Object files that will not become programs all go into the static library.
+Object files that will become programs are linked against that library:
+
+    *.cpp (program) --> *.o -->           ---+--> *
+    *.cpp (other)   --> *.o --> libproj.a --/
+
+The Makefile also has another trick up its sleeve. Normally,
+if prog.cpp includes header.hpp, then when header.hpp is newer,
+prog.o should be updated. But Make wouldn't know of the inclusion, so it thinks
+prog.o is new enough. This requires the user to say: 'make clean', and then
+'make' again, recompiling all sources.
+
+To notify Make of the fact that prog.cpp does include header.hpp,
+we have the compiler generate so-called dependency files, which are little
+snippets of Makefile, when it is compiling the sources anyway. Those dependency
+files we include in the Makefile, and now when header.hpp is newer, Make will
+recompile prog.cpp. And seldom do we still have to call 'make clean'. (Only in
+the case when we remove a source or header file from the git repo.)
 
 ## Solving
 
