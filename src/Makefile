@@ -35,10 +35,13 @@ CXX_OBJDEPS = $(patsubst %.cpp,%.dep,$(CXX_SOURCES))
 
 # Whatever is not a program source goes into the library.
 CXX_LIBSOURCES = $(filter-out $(CXX_PROG_SOURCES),$(CXX_SOURCES))
+CXX_LIBOBJECTS = $(CXX_LIBSOURCES:.cpp=.o)
 
 # Name of our library and the file containing it.
 LIBNAME = proj
 LIBRARY = lib$(LIBNAME).a
+
+ENSURE_DIR = $(shell test -d $(dir $(DEPDIR)/$@) || mkdir -p $(dir $(DEPDIR)/$@))
 
 # https://www.gnu.org/software/make/manual/html_node/Rules.html#Rules
 # https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
@@ -52,11 +55,12 @@ all: $(PROGRAMS)
 # We don't call the linker directly. We call it through the compiler.
 $(CXX_PROGRAMS): %: %.o $(LIBRARY)
 	@printf "[Linking $@]\n\t"
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
+	$(ENSURE_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
 # The library contains all object files that don't become programs.
 $(LIBRARY): $(CXX_LIBOBJECTS)
-	@printf "[Composing $@ of $^]\n\t"
+	@printf "[Composing $@]\n\t"
 	ar rcs $@ $^
 
 # Any non-program C++ source builds an object that goes into the library.
@@ -64,6 +68,7 @@ $(LIBRARY): $(CXX_LIBOBJECTS)
 # (But Make does not know that!)
 $(CXX_OBJECTS): %.o: %.cpp $(DEPDIR)
 	@printf "[Compiling $@]\n\t"
+	$(ENSURE_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 # This is where we store the dependencies.
