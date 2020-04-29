@@ -40,6 +40,8 @@ CXX_LIBSOURCES = $(filter-out $(CXX_PROG_SOURCES),$(CXX_SOURCES))
 LIBNAME = proj
 LIBRARY = lib$(LIBNAME).a
 
+ENSURE_DIR = $(shell test -d $(dir $(DEPDIR)/$@) || mkdir -p $(dir $(DEPDIR)/$@))
+
 # https://www.gnu.org/software/make/manual/html_node/Rules.html#Rules
 # https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
 
@@ -52,6 +54,7 @@ all: $(PROGRAMS)
 # We don't call the linker directly. We call it through the compiler.
 $(CXX_PROGRAMS): %: %.o $(LIBRARY)
 	@printf "[Linking $@]\n\t"
+	$(ENSURE_DIR)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 # The library contains all object files that don't become programs.
@@ -64,6 +67,7 @@ $(LIBRARY): $(CXX_LIBOBJECTS)
 # (But Make does not know that!)
 $(CXX_OBJECTS): %.o: %.cpp $(DEPDIR)
 	@printf "[Compiling $@]\n\t"
+	$(ENSURE_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 
 # This is where we store the dependencies.
