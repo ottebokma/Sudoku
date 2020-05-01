@@ -82,3 +82,21 @@ size_t next_empty(Sudoku const &sudoku)
             }
         return 81;
    }
+
+size_t row_of(size_t const pos)
+  {
+	return pos / 9;
+  }
+
+size_t column_of(size_t const pos)
+  {
+    return pos % 9;
+  }
+
+size_t block_of(size_t const pos)
+  {
+    size_t const block_row = row_of(pos) / 3;
+    size_t const block_column = column_of(pos) / 3;
+    
+    return block_column + block_row * 3;
+  }
