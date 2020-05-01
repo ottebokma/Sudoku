@@ -7,3 +7,5 @@ lib*.so.*
 src/sudoku
 generated_deps
 src/programs/test
+buildgraph.dot
+gmon.out
