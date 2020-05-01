@@ -49,6 +49,8 @@ ENSURE_DIR = $(shell test -d $(dir $(DEPDIR)/$@) || mkdir -p $(dir $(DEPDIR)/$@)
 # The default target (by convention called 'all') is: to build the programs.
 all: $(PROGRAMS)
 
+.PHONY: all
+
 # Programs are built by linking their object files against the convenience
 # library. This is a static pattern rule:
 # https://www.gnu.org/software/make/manual/html_node/Static-Usage.html#Static-Usage
@@ -66,7 +68,7 @@ $(LIBRARY): $(CXX_LIBOBJECTS)
 # Any non-program C++ source builds an object that goes into the library.
 # The use of $(DEPFLAGS) causes a dependency file to also be written.
 # (But Make does not know that!)
-$(CXX_OBJECTS): %.o: %.cpp $(DEPDIR)
+$(CXX_OBJECTS): %.o: %.cpp | $(DEPDIR)
 	@printf "[Compiling $@]\n\t"
 	$(ENSURE_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
