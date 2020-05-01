@@ -43,11 +43,15 @@ LIBRARY = lib$(LIBNAME).a
 
 ENSURE_DIR = $(shell test -d $(dir $(DEPDIR)/$@) || mkdir -p $(dir $(DEPDIR)/$@))
 
+EDGES = $(DEPDIR)/build.edges
+ADD_EDGES = $(foreach PREREQ,$^,$(file > $(EDGES),$(PREREQ) -> $@))
+
 # https://www.gnu.org/software/make/manual/html_node/Rules.html#Rules
 # https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
 
 # The default target (by convention called 'all') is: to build the programs.
 all: $(PROGRAMS)
+	@$(ADD_EDGES)
 
 .PHONY: all
 
@@ -59,11 +63,13 @@ $(CXX_PROGRAMS): %: %.o $(LIBRARY)
 	@printf "[Linking $@]\n\t"
 	$(ENSURE_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+	@$(ADD_EDGES)
 
 # The library contains all object files that don't become programs.
 $(LIBRARY): $(CXX_LIBOBJECTS)
 	@printf "[Composing $@]\n\t"
 	ar rcs $@ $^
+	@$(ADD_EDGES)
 
 # Any non-program C++ source builds an object that goes into the library.
 # The use of $(DEPFLAGS) causes a dependency file to also be written.
@@ -72,10 +78,17 @@ $(CXX_OBJECTS): %.o: %.cpp | $(DEPDIR)
 	@printf "[Compiling $@]\n\t"
 	$(ENSURE_DIR)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
+	@$(ADD_EDGES)
 
 # This is where we store the dependencies.
 $(DEPDIR):
 	mkdir $@
+
+buildgraph.dot: all
+	echo "digraph {" > $@
+	$(file >> $@,$(file <$(EDGES)))
+	echo "}" >> $@
+	cat $@
 
 # 'make clean' removes all generated files.
 clean:
