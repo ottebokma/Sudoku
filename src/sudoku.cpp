@@ -6,6 +6,12 @@ enum {
     E_INVALIDCOMPUTATION
 };
 
+
+typedef int Sudoku[81];
+
+size_t next_empty(Sudoku const &sudoku);
+
+
 using namespace std;
 
 int main()
@@ -39,6 +45,10 @@ int main()
         }
     }
 
+    size_t ne = next_empty(sudoku_arr);
+  
+    cout << "Next empty field at index " << ne << '\n';
+
     string sudoku_str(81,'.');
 
     //Convert array to string
@@ -62,3 +72,13 @@ int main()
     cout << in_str << '\n';
     cout << sudoku_str << '\n';
 }
+
+size_t next_empty(Sudoku const &sudoku)
+   {
+        for (size_t pos = 0; pos != 81 ; ++pos)
+            {
+                if (sudoku [pos] == 0)
+                    return pos;
+            }
+        return 81;
+   }
