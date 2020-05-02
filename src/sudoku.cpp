@@ -8,10 +8,10 @@ enum {
 
 
 typedef int Sudoku[81];
+
 size_t row_of(size_t const pos);
 size_t column_of(size_t const pos);
 size_t block_of(size_t const pos);
-
 size_t next_empty(Sudoku const &sudoku);
 
 
@@ -77,29 +77,29 @@ int main()
 }
 
 size_t next_empty(Sudoku const &sudoku)
-   {
-        for (size_t pos = 0; pos != 81 ; ++pos)
-            {
-                if (sudoku [pos] == 0)
-                    return pos;
-            }
-        return 81;
-   }
+{
+    for (size_t pos = 0; pos != 81 ; ++pos)
+    {
+        if (sudoku [pos] == 0)
+            return pos;
+    }
+    return 81;
+}
 
 size_t row_of(size_t const pos)
-  {
+{
 	return pos / 9;
-  }
+}
 
 size_t column_of(size_t const pos)
-  {
+{
     return pos % 9;
-  }
+}
 
 size_t block_of(size_t const pos)
-  {
+{
     size_t const block_row = row_of(pos) / 3;
     size_t const block_column = column_of(pos) / 3;
     
     return block_column + block_row * 3;
-  }
+}
