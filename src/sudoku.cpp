@@ -1,18 +1,12 @@
+#include "functions/sudoku.hh"
 #include <iostream>
 #include <string>
+
 
 enum {
     E_INVALIDINPUT = 1,
     E_INVALIDCOMPUTATION
 };
-
-
-typedef int Sudoku[81];
-
-size_t row_of(size_t const pos);
-size_t column_of(size_t const pos);
-size_t block_of(size_t const pos);
-size_t next_empty(Sudoku const &sudoku);
 
 
 using namespace std;
@@ -74,32 +68,4 @@ int main()
     
     cout << in_str << '\n';
     cout << sudoku_str << '\n';
-}
-
-size_t next_empty(Sudoku const &sudoku)
-{
-    for (size_t pos = 0; pos != 81 ; ++pos)
-    {
-        if (sudoku [pos] == 0)
-            return pos;
-    }
-    return 81;
-}
-
-size_t row_of(size_t const pos)
-{
-	return pos / 9;
-}
-
-size_t column_of(size_t const pos)
-{
-    return pos % 9;
-}
-
-size_t block_of(size_t const pos)
-{
-    size_t const block_row = row_of(pos) / 3;
-    size_t const block_column = column_of(pos) / 3;
-    
-    return block_column + block_row * 3;
 }
