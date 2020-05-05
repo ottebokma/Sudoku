@@ -23,8 +23,7 @@ int main()
         return E_INVALIDINPUT;
     }
         
-
-    int sudoku_arr[81];
+    Sudoku sudoku_arr;
 
     //Convert input string to array
     //So that the program can use the input

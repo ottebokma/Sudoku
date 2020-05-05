@@ -7,6 +7,7 @@ size_t row_of(size_t const pos);
 size_t column_of(size_t const pos);
 size_t block_of(size_t const pos);
 size_t next_empty(Sudoku const &sudoku);
+bool complete(Sudoku const &sudoku);
 
 
 #endif //def_ottes_sudoku_hh
