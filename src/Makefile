@@ -46,6 +46,13 @@ ENSURE_DIR = $(shell test -d $(dir $(DEPDIR)/$@) || mkdir -p $(dir $(DEPDIR)/$@)
 EDGES = $(DEPDIR)/build.edges
 ADD_EDGES = $(foreach PREREQ,$^,$(file >> $(EDGES),"$(PREREQ)" -> "$@" [label = "$(ACTION)"]))
 
+# If 'VERBOSE' is set, show what we are doing.
+ifeq (,$(VERBOSE))
+    SHOWCOMMAND = @
+else
+    undefine SHOWCOMMAND
+endif
+
 # https://www.gnu.org/software/make/manual/html_node/Rules.html#Rules
 # https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
 
@@ -59,16 +66,16 @@ all: $(PROGRAMS)
 # https://www.gnu.org/software/make/manual/html_node/Static-Usage.html#Static-Usage
 # We don't call the linker directly. We call it through the compiler.
 $(CXX_PROGRAMS): %: %.o $(LIBRARY)
-	@printf "[Linking $@]\n\t"
+	@printf "[Linking $@]\n"
 	$(ENSURE_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+	$(SHOWCOMMAND) $(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 	@$(ADD_EDGES)
 $(CXX_PROGRAMS): ACTION = link
 
 # The library contains all object files that don't become programs.
 $(LIBRARY): $(CXX_LIBOBJECTS)
-	@printf "[Composing $@]\n\t"
-	ar rcs $@ $^
+	@printf "[Composing $@]\n"
+	$(SHOWCOMMAND) ar rcs $@ $^
 	@$(ADD_EDGES)
 $(LIBRARY): ACTION = gather
 
@@ -76,9 +83,9 @@ $(LIBRARY): ACTION = gather
 # The use of $(DEPFLAGS) causes a dependency file to also be written.
 # (But Make does not know that!)
 $(CXX_OBJECTS): %.o: %.cpp | $(DEPDIR)
-	@printf "[Compiling $@]\n\t"
-	$(ENSURE_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
+	@printf "[Compiling $@]\n"
+	$(SHOWCOMMAND) $(ENSURE_DIR)
+	$(SHOWCOMMAND) $(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEPFLAGS) -c -o $@ $<
 	@$(ADD_EDGES)
 $(CXX_OBJECTS): ACTION = compile
 
@@ -102,8 +109,8 @@ show: buildgraph.dot
 
 # 'make clean' removes all generated files.
 clean:
-	rm -f $(PROGRAMS) $(CXX_OBJECTS) $(LIBRARY) buildgraph.dot
-	rm -rf $(DEPDIR)
+	$(SHOWCOMMAND) rm -f $(PROGRAMS) $(CXX_OBJECTS) $(LIBRARY) buildgraph.dot
+	$(SHOWCOMMAND) rm -rf $(DEPDIR)
 
 # Even if a file 'clean' should exist, run the recipe anyway.
 .PHONY: clean
