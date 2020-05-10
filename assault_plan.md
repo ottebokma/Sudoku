@@ -590,13 +590,14 @@ Perhaps call it 'solved'.
 ### Solving proper
 
 Now that we can tell whether a Sudoku is valid, we are going to try and solve one.
+(Don't cut corners by reading only part of this section! You will mess up then.)
 
 The steps are quite simple:
 
 * Find the next field that has no value yet.
 * For each value in [1-9],
   * Fill in that value.
-  * If the Sudoku is now invalid, continue with the next value.
+  * If the Sudoku is now invalid, try the next value, in the same field.
     else (if it is still valid), continue with the next field.
   * If there are no more fields left (and the Sudoku is still valid), we have
     solved it. Print the solution!
@@ -642,7 +643,7 @@ Write a function called 'solve' that returns bool and takes a reference to a
 Sudoku (but not a const reference). It should do the following.
 
 * Find the next empty field.
-  * If there is none, check that the sudoku is solved.
+  * If there is none, check that the sudoku is indeed solved.
     * If it is solved, print the solution and return true.
 	  Otherwise, just return false.
   * Try to fill in each number from [1-9]. For each number filled in,
@@ -650,11 +651,47 @@ Sudoku (but not a const reference). It should do the following.
 	  If not, skip to the next number.
 	* Magic action should happen here.
   * Now, no numbers are left. If none of our attempts worked, we should return
-    false.
+    false, but before that, we must make the current field empty once more.
 	
-So far, we have a function that takes a Sudoku from input. It finds the first
-unset field, and tries to fill in values. If the number filled in conflicts with
-another in the same row/column/square, it skips that number. Let's assume that a
-'1' can actually be filled in. Then we have a Sudoku from input with another
-number filled in by the program. How do we figure out whether that could become
-a valid Sudoku?
+#### Assignment
+	
+Now for the magic. So far, we have functions that take a Sudoku from input. We
+can find the first unset field, and try to fill in values. If the filled-in
+value conflicts with another that is already in the same row/column/square, then
+we skip that value.
+
+Let's assume that e.g. a '3' can actually be filled in without immediate conflict.
+So now we have a Sudoku from input with one more number filled in by our program.
+But the sudoku is probably not complete yet. So we have to try and fill in more
+values, in other fields, to figure that out.
+
+As it turns out, we already have a function that does exactly that. But it does
+it for only one field. Fix the function by making it call itself.
+
+N.B.: This assignment should be extremely simple in terms of amount of code. A
+single line is enough. The hard work is in wrapping your mind around recursion
+for the first time - where a function calls itself.
+
+### Conclusion
+
+If you have done everything well, your program will now work and solve sudokus.
+If so, rejoice! It seldom happens that a program works on the first try!
+
+More likely, it will not. It may
+* run forever without ever stopping,
+* die with a nasty error message,
+* give you no output,
+* give you bogus output,
+* give you many solutions,
+* give you incorrect solutions,
+* display correct solutions on Mondays and overheat your dishwasher on other days,
+* any combination of the above, or worse, depending on the occasion.
+
+If you have saved time by not writing test programs, or by writing incomplete
+test programs, you will now spend double that amount of time on finding the
+flaws in your work. Best solution may be to still write those tests.
+Of course, if you have saved time by not writing comments in your code, you'll
+have to figure out once more what all your functions were supposed to do,
+because you will have partially forgotten.
+
+Good Luck!
