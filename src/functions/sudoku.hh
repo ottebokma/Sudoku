@@ -19,4 +19,6 @@ size_t index_of_pos_in_row(size_t row, size_t pos_in_row);
 
 size_t index_of_pos_in_column(size_t column, size_t pos_in_column);
 
+size_t index_of_pos_in_block(size_t block, size_t pos_in_block);
+
 #endif //def_ottes_sudoku_hh

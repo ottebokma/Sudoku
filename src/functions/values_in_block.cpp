@@ -1,12 +1,15 @@
 #include "sudoku.ih"
 
-vector<int> values_in_column(Sudoku const &sudoku, size_t const column)
+vector<int> values_in_block(Sudoku const &sudoku, size_t const block)
 {
     vector<int> values;
-
-    for (size_t i = 0; i < count; i++)
+    
+    for (size_t pos_in_block = 0; pos_in_block < 9; pos_in_block++)
     {
-        /* code */
+        size_t const index = index_of_pos_in_block(block, pos_in_block);
+        int const value = sudoku[index];
+        if (value != 0)
+            values.push_back(value);
     }
     return values;
 }

@@ -7,7 +7,7 @@ int main()
     {
         for (size_t pos_in_block = 0; pos_in_block < 9; pos_in_block++)
         {
-            std::cout << index_of_pos_in_row(block, pos_in_block) << " ";
+            std::cout << index_of_pos_in_block(block, pos_in_block) << " ";
         }
         std::cout << '\n';
     }
