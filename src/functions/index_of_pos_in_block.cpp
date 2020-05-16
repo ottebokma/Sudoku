@@ -1,23 +1,17 @@
 #include "sudoku.ih"
 
-size_t index_of_pos_in_block(size_t block, size_t pos_in_block)
+size_t index_of_pos_in_block(size_t const block, size_t const pos_in_block)
 {
     // Which column and row (of blocks, so 0-2) the block is in.
-    size_t block_column = block % 3;
-    size_t block_row = block / 3;
+    size_t const block_column = block % 3;
+    size_t const block_row = block / 3;
 
     // Which column and row (of fields, so 0-9) the field is in.
-    size_t column;
-    size_t row;
-
-    column = block_column * 3 + pos_in_block % 3;
-    row = block_row * 3 + pos_in_block / 3;
+    size_t const column = block_column * 3 + pos_in_block % 3;
+    size_t const row = block_row * 3 + pos_in_block / 3;
 
     // Compute index of field.
     return row * 9 + column;
-
-    
-    
 }
 
 /**

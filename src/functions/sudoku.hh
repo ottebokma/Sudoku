@@ -21,4 +21,12 @@ size_t index_of_pos_in_column(size_t column, size_t pos_in_column);
 
 size_t index_of_pos_in_block(size_t block, size_t pos_in_block);
 
+bool valid(Sudoku const &sudoku);
+
+std::vector<int> values_in_row(Sudoku const &sudoku, size_t const row);
+
+std::vector<int> values_in_column(Sudoku const &sudoku, size_t const column);
+
+std::vector<int> values_in_block(Sudoku const &sudoku, size_t const block);
+
 #endif //def_ottes_sudoku_hh

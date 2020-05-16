@@ -41,6 +41,12 @@ int main()
         }
     }
 
+    if (! valid(sudoku_arr))
+    {
+        cerr << "Invalid numbers in input sudoku\n";
+        return E_INVALIDINPUT;
+    }
+
     size_t ne = next_empty(sudoku_arr);
   
     cout << "Next empty field at index " << ne << '\n';
