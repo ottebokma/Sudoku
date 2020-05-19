@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//Gives the index (in the sudoku) for a position in a block
 size_t index_of_pos_in_block(size_t const block, size_t const pos_in_block)
 {
     // Which column and row (of blocks, so 0-2) the block is in.

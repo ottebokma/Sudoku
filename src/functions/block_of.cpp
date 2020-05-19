@@ -1,4 +1,6 @@
 #include "sudoku.ih"
+
+//Checks in which block a position is
 size_t block_of(size_t const pos)
 {
     size_t const block_row = row_of(pos) / 3;

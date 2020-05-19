@@ -29,4 +29,6 @@ std::vector<int> values_in_column(Sudoku const &sudoku, size_t const column);
 
 std::vector<int> values_in_block(Sudoku const &sudoku, size_t const block);
 
+bool solved(Sudoku const &sudoku);
+
 #endif //def_ottes_sudoku_hh

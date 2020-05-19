@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//returns the values that are i a particular column
 vector<int> values_in_column(Sudoku const &sudoku, size_t const column)
 {
     vector<int> values;

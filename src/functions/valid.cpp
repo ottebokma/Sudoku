@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//checks if the sudoku is valid
 bool valid(Sudoku const &sudoku)
 {
     //checks if rows are valid

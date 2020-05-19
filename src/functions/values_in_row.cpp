@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//returns the values that are i a particular row
 vector<int> values_in_row(Sudoku const &sudoku, size_t const row)
 {
     vector<int> values;

@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//returns the values that are i a particular block
 vector<int> values_in_block(Sudoku const &sudoku, size_t const block)
 {
     vector<int> values;
