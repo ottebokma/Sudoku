@@ -12,3 +12,4 @@ gmon.out
 src/programs/test_index_of_pos_in_block
 src/programs/test_index_of_pos_in_column
 src/programs/test_index_of_pos_in_row
+src/programs/test_solved

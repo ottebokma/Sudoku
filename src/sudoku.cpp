@@ -51,6 +51,9 @@ int main()
   
     cout << "Next empty field at index " << ne << '\n';
 
+    if (solve(sudoku_arr))
+        return 0;
+
     string sudoku_str(81,'.');
 
     //Convert array to string

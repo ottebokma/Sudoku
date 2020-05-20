@@ -2,6 +2,7 @@
 #define def_ottes_sudoku_hh
 #include <cstdlib>
 #include <vector>
+#include <ostream>
 
 typedef int Sudoku[81];
 
@@ -30,5 +31,9 @@ std::vector<int> values_in_column(Sudoku const &sudoku, size_t const column);
 std::vector<int> values_in_block(Sudoku const &sudoku, size_t const block);
 
 bool solved(Sudoku const &sudoku);
+
+std::ostream &operator<<(std::ostream &outs, Sudoku const &sudoku);
+
+bool solve(Sudoku &sudoku);
 
 #endif //def_ottes_sudoku_hh
