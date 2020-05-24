@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <vector>
 #include <ostream>
+#include <string>
 
 typedef int Sudoku[81];
 
@@ -35,5 +36,7 @@ bool solved(Sudoku const &sudoku);
 std::ostream &operator<<(std::ostream &outs, Sudoku const &sudoku);
 
 bool solve(Sudoku &sudoku);
+
+std::string beautification(Sudoku const &sudoku);
 
 #endif //def_ottes_sudoku_hh
