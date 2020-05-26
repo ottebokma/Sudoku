@@ -23,7 +23,7 @@ bool valid(Sudoku const &sudoku)
             return false;
     }
 
-    //checks if block are valid
+    //checks if blocks are valid
     for (size_t block = 0; block < 9; ++block)
     {
         vector<int> values = values_in_block(sudoku, block);

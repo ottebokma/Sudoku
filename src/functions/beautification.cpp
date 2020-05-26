@@ -1,5 +1,6 @@
 #include "sudoku.ih"
 
+//Makes the sudoku more human friendly
 string beautification(Sudoku const &sudoku)
 {
     string output("╔═══════╤═══════╤═══════╗\n");
