@@ -39,4 +39,6 @@ bool solve(Sudoku &sudoku);
 
 std::string beautification(Sudoku const &sudoku);
 
+size_t string_to_array(std::string const input, size_t const pos);
+
 #endif //def_ottes_sudoku_hh

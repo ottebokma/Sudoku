@@ -28,19 +28,7 @@ int main()
     //Convert input string to array
     //So that the program can use the input
     for (size_t pos = 0; pos != 81; ++pos)
-    {
-        char const letter = in_str[pos];
-        if (letter == '.')
-            sudoku_arr[pos] = 0;
-        else if ('1' <= letter and letter <= '9')
-            sudoku_arr[pos] = letter - '0';
-        //Checks that there are only numbers in the input
-        else
-        {
-            cerr << "Invalid input: " << letter << '\n';
-            return E_INVALIDINPUT;
-        }
-    }
+        sudoku_arr[pos] = string_to_array(in_str, pos);
 
     //Checks that the input sudoku is valid
     if (! valid(sudoku_arr))
